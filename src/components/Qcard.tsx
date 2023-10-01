@@ -2,7 +2,7 @@ import React from "react";
 
 type Props = {
   question: string;
-  answer: string[];
+  answers: string[];
   callback: any;
   userAnswer: any;
   questionNum: number;
@@ -10,7 +10,7 @@ type Props = {
 };
 const Qcard: React.FC<Props> = ({
   question,
-  answer,
+  answers,
   callback,
   userAnswer,
   questionNum,
@@ -23,13 +23,14 @@ const Qcard: React.FC<Props> = ({
       </p>
       <p dangerouslySetInnerHTML={{ __html: question }}></p>
       <div>
-        {answer.map((answer) => (
-          <div>
-            <button disabled={userAnswer} onClick={callback}>
-              <span dangerouslySetInnerHTML={{ __html: answer }}></span>
-            </button>
-          </div>
-        ))}
+        {answers &&
+          answers.map((answer) => (
+            <div key={answer}>
+              <button disabled={userAnswer} onClick={callback}>
+                <span dangerouslySetInnerHTML={{ __html: answer }}></span>
+              </button>
+            </div>
+          ))}
       </div>
     </div>
   );
