@@ -5,8 +5,6 @@ import { QuestionState, Difficulty } from "./API";
 //compoenents
 import Qcard from "./components/Qcard";
 
-export type CorrectOne = string;
-
 export type AnswerObject = {
   question: string;
   answer: string;
@@ -23,7 +21,6 @@ function App() {
   const [score, setScore] = useState(0);
   const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
   const [gameOver, setGameOver] = useState(true);
-  const [correctAnswer, setCorrectAnswer] = useState<CorrectOne[]>([]);
 
   fetchQuiz(TotalQues, Difficulty.EASY);
 
@@ -61,7 +58,7 @@ function App() {
         correct,
         correctAnswer: questions[queNum].correct_answer,
       };
-      setCorrectAnswer((prev) => [...prev, questions[queNum].correct_answer]);
+
       setUserAnswers((prev) => [...prev, answerObject]);
     }
   };
