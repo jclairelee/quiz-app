@@ -8,6 +8,7 @@ type Props = {
   questionNum: number;
   totalQuestions: number;
 };
+
 const Qcard: React.FC<Props> = ({
   question,
   answers,
@@ -23,14 +24,21 @@ const Qcard: React.FC<Props> = ({
       </p>
       <p dangerouslySetInnerHTML={{ __html: question }}></p>
       <div>
-        {answers &&
-          answers.map((answer) => (
-            <div key={answer}>
-              <button disabled={userAnswer} onClick={callback}>
-                <span dangerouslySetInnerHTML={{ __html: answer }}></span>
+        {answers && answers.length > 0 ? (
+          answers.map((item) => (
+            <div key={item}>
+              <button
+                disabled={userAnswer ? true : false}
+                value={item}
+                onClick={callback}
+              >
+                <span dangerouslySetInnerHTML={{ __html: item }} />
               </button>
             </div>
-          ))}
+          ))
+        ) : (
+          <p>No answer</p>
+        )}
       </div>
     </div>
   );
