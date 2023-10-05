@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchQuiz } from "./API";
+import "./App.css";
 //types
 import { QuestionState, Difficulty } from "./API";
 //compoenents
@@ -45,6 +46,8 @@ function App() {
       if (correct) {
         setScore((prev) => prev + 1);
         console.log("correct");
+        // add tada sound
+        // add function to display the next question.
       } else {
         // If the answer is incorrect, show an alert with the correct answer
         alert(
@@ -73,14 +76,23 @@ function App() {
   };
 
   return (
-    <div>
-      <h1>Quiz</h1>
+    <div className="bg-sky-100 flex flex-col relative h-screen">
+      {/* before the quiz starts */}
       {gameOver || userAnswers.length === TotalQues ? (
-        <button className="start" onClick={startTrivia}>
-          Start
-        </button>
+        <div className="mx-auto mt-[35%]">
+          <h1 className="text-2xl font-bold flex mb-3">Begin the Quiz Now</h1>
+          <button
+            className="h-10 w-20 flex justify-center mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-"
+            onClick={startTrivia}
+          >
+            Start
+          </button>
+        </div>
       ) : null}
-      {!gameOver ? <p className="score">Score: {score}</p> : null}
+      {/* after the quiz starts */}
+      {!gameOver ? (
+        <p className="flex absolute right-10 mt-10">🍎 {score}</p>
+      ) : null}
       {loading && <p>Loading Questions ...</p>}
       {!loading && !gameOver && (
         <Qcard
