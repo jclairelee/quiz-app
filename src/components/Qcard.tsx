@@ -1,4 +1,5 @@
 import React from "react";
+import { getCombinedNodeFlags } from "typescript";
 
 type Props = {
   question: string;
@@ -17,17 +18,22 @@ const Qcard: React.FC<Props> = ({
   questionNum,
   totalQuestions,
 }) => {
+  const combinedHTML = `<p>${questionNum}. ${question}</p>`;
   return (
-    <div>
-      <p>
-        Question: {questionNum} / {totalQuestions}
+    <div className="pl-10 mt-10">
+      <p className="mb-5">
+        🍏 {questionNum} / {totalQuestions}
       </p>
-      <p dangerouslySetInnerHTML={{ __html: question }}></p>
+      <p
+        dangerouslySetInnerHTML={{ __html: combinedHTML }}
+        className="pl-3 mb-5 mr-10 text-2xl"
+      ></p>
       <div>
         {answers && answers.length > 0 ? (
           answers.map((item) => (
-            <div key={item}>
+            <div key={item} className="mb-3 pr-10">
               <button
+                className="cursor-pointer h-8 w-full px-5 text-indigo-700 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100"
                 disabled={userAnswer ? true : false}
                 value={item}
                 onClick={callback}

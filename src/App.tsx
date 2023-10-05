@@ -5,6 +5,9 @@ import "./App.css";
 import { QuestionState, Difficulty } from "./API";
 //compoenents
 import Qcard from "./components/Qcard";
+// audio
+import correctSoundEff from "./assets/audio/tada.mp3";
+import errSoundEff from "./assets/audio/incorrect.mp3";
 
 export type AnswerObject = {
   question: string;
@@ -30,7 +33,6 @@ function App() {
     setGameOver(false);
 
     const newQuestions = await fetchQuiz(TotalQues, Difficulty.EASY);
-    console.log();
     setQuestions(newQuestions);
     setScore(0);
     setUserAnswers([]);
@@ -38,21 +40,27 @@ function App() {
     setLoading(false);
   };
 
+  const playSound = (soundfile: any) => {
+    const audio = new Audio(soundfile);
+    audio.play();
+  };
+
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!gameOver) {
       const answer = e.currentTarget.value;
       const correct = questions[queNum].correct_answer === answer;
-      //add score if answer is correct
+
       if (correct) {
+        playSound(correctSoundEff);
         setScore((prev) => prev + 1);
-        console.log("correct");
-        // add tada sound
-        // add function to display the next question.
+        setTimeout(nextQuestion, 1000);
       } else {
+        playSound(errSoundEff);
         // If the answer is incorrect, show an alert with the correct answer
-        alert(
-          `Incorrect! The correct answer is: ${questions[queNum].correct_answer}`
-        );
+        // alert(
+        //   `Incorrect! The correct answer is: ${questions[queNum].correct_answer}`
+        // );
+        console.log(answer);
       }
       //save answer in the array for user answers
       const answerObject = {
@@ -79,7 +87,7 @@ function App() {
     <div className="bg-sky-100 flex flex-col relative h-screen">
       {/* before the quiz starts */}
       {gameOver || userAnswers.length === TotalQues ? (
-        <div className="mx-auto mt-[35%]">
+        <div className="mx-auto pt-[25vh]">
           <h1 className="text-2xl font-bold flex mb-3">Begin the Quiz Now</h1>
           <button
             className="h-10 w-20 flex justify-center mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-"
@@ -110,7 +118,7 @@ function App() {
       userAnswers.length === queNum + 1 &&
       queNum !== TotalQues - 1 ? (
         <button className="next" onClick={nextQuestion}>
-          Next Question
+          Skip
         </button>
       ) : null}
     </div>
