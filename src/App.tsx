@@ -8,6 +8,7 @@ import Qcard from "./components/Qcard";
 // audio
 import correctSoundEff from "./assets/audio/tada.mp3";
 import errSoundEff from "./assets/audio/incorrect.mp3";
+import Confetti from "react-confetti";
 
 export type AnswerObject = {
   question: string;
@@ -25,6 +26,8 @@ function App() {
   const [score, setScore] = useState(0);
   const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
   const [gameOver, setGameOver] = useState(true);
+  const [showResult, setShowResult] = useState(false);
+  const [isActive, setIsActive] = useState(true);
 
   fetchQuiz(TotalQues, Difficulty.EASY);
 
@@ -46,21 +49,25 @@ function App() {
   };
 
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!gameOver) {
+    if (queNum + 1 === TotalQues) {
+      setShowResult(true);
+    } else if (!gameOver) {
       const answer = e.currentTarget.value;
       const correct = questions[queNum].correct_answer === answer;
 
       if (correct) {
         playSound(correctSoundEff);
         setScore((prev) => prev + 1);
-        setTimeout(nextQuestion, 1000);
+        setTimeout(nextQuestion, 700);
       } else {
         playSound(errSoundEff);
+        setIsActive(false);
+
         // If the answer is incorrect, show an alert with the correct answer
         // alert(
         //   `Incorrect! The correct answer is: ${questions[queNum].correct_answer}`
         // );
-        console.log(answer);
+        console.log(gameOver);
       }
       //save answer in the array for user answers
       const answerObject = {
@@ -79,8 +86,13 @@ function App() {
     if (nextQue === TotalQues) {
       setGameOver(true);
     } else {
+      setIsActive(true);
       setQueNum(nextQue);
     }
+  };
+  const confettiConfig = {
+    width: window.innerWidth,
+    height: window.innerHeight,
   };
 
   return (
@@ -98,11 +110,11 @@ function App() {
         </div>
       ) : null}
       {/* after the quiz starts */}
-      {!gameOver ? (
+      {!gameOver && !showResult ? (
         <p className="flex absolute right-10 mt-10">🍎 {score}</p>
       ) : null}
       {loading && <p>Loading Questions ...</p>}
-      {!loading && !gameOver && (
+      {!loading && !gameOver && !showResult && (
         <Qcard
           questionNum={queNum + 1}
           totalQuestions={TotalQues}
@@ -110,16 +122,26 @@ function App() {
           answers={questions[queNum].answers}
           userAnswer={userAnswers ? userAnswers[queNum] : undefined}
           callback={checkAnswer}
+          isActive={isActive}
         />
       )}
 
       {!gameOver &&
+      !showResult &&
       !loading &&
       userAnswers.length === queNum + 1 &&
       queNum !== TotalQues - 1 ? (
         <button className="next" onClick={nextQuestion}>
           Skip
         </button>
+      ) : null}
+
+      {showResult ? (
+        <div className="flex justify-center mt-[30%]">
+          <Confetti {...confettiConfig} />
+          <span>Well done!</span>
+          <span>Your total score: {score}</span>
+        </div>
       ) : null}
     </div>
   );

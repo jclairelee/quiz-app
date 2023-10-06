@@ -1,5 +1,4 @@
 import React from "react";
-import { getCombinedNodeFlags } from "typescript";
 
 type Props = {
   question: string;
@@ -8,6 +7,7 @@ type Props = {
   userAnswer: any;
   questionNum: number;
   totalQuestions: number;
+  isActive: boolean;
 };
 
 const Qcard: React.FC<Props> = ({
@@ -17,6 +17,7 @@ const Qcard: React.FC<Props> = ({
   userAnswer,
   questionNum,
   totalQuestions,
+  isActive,
 }) => {
   const combinedHTML = `<p>${questionNum}. ${question}</p>`;
   return (
@@ -33,7 +34,11 @@ const Qcard: React.FC<Props> = ({
           answers.map((item) => (
             <div key={item} className="mb-3 pr-10">
               <button
-                className="cursor-pointer h-8 w-full px-5 text-indigo-700 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100"
+                className={`h-8 w-full px-5 ${
+                  isActive
+                    ? "cursor-pointer text-indigo-700 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-10"
+                    : " text-white bg-gray-300 rounded focus:outline-none"
+                }`}
                 disabled={userAnswer ? true : false}
                 value={item}
                 onClick={callback}
@@ -51,3 +56,4 @@ const Qcard: React.FC<Props> = ({
 };
 
 export default Qcard;
+// if gameover, qcard display none.

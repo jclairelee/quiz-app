@@ -1,4 +1,4 @@
-// custom.d.ts
+// asset.d.ts
 
 declare module "*.mp3" {
   const value: string;
